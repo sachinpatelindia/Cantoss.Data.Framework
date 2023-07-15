@@ -64,8 +64,15 @@ namespace Cantoss.Data.Framework.Operations
 
         public async Task<T> Insert<T>(T entity)
         {
-            var result =await GetCosmosContainer();
-            return await result.CreateItemAsync<T>(entity);
+            var result = await GetCosmosContainer();
+            try
+            {
+                return await result.CreateItemAsync<T>(entity);
+            }
+            catch (Exception ex)
+            {
+            }
+            return entity;
         }
 
         public Task<IList<T>> InsertMany<T>(IList<T> entities)

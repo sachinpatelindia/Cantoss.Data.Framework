@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-
-namespace Cantoss.Data.Framework
+﻿namespace Cantoss.Data.Framework
 {
     /// <summary>
     /// Azure connectionstring value
