@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -10,15 +10,16 @@
     <Description>This library project use to handle Azure data connection easily . This project is under development and we will update feature on regular basis.</Description>
     <PackageProjectUrl>www.cantoss.com</PackageProjectUrl>
     <Copyright>GPL</Copyright>
-    <PackageIcon>cantoss_logo.png</PackageIcon>
+    <PackageIcon>L2.png</PackageIcon>
     <RepositoryUrl>https://github.com/sachinpatelindia/Cantoss.Data.Framework</RepositoryUrl>
     <PackageTags>Cantoss, CosmosDb, Azure, Azure CosmosDv</PackageTags>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>1.0.1-beta</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\..\Desktop\cantoss_logo.png">
+    <None Include="..\..\..\..\Desktop\L2.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
