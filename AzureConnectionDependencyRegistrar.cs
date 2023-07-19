@@ -19,7 +19,7 @@ namespace Cantoss.Data.Framework
 
         private void RegisterDependency(IServiceCollection services)
         {
-            _ = services.AddSingleton<IConnectionFactory, ConnectionFactory>(con =>
+            _ = services.AddScoped<IConnectionFactory, ConnectionFactory>(con =>
             {
                 return new ConnectionFactory(_connection);
             });

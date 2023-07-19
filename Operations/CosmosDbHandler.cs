@@ -15,12 +15,11 @@ namespace Cantoss.Data.Framework.Operations
               _connectionFactory = connectionFactory;
         }
 
-        public async Task<IList<T>> GetMany<T>(T entity)
+        public async Task<IList<T>> GetMany<T>(object partitionKey)
         {
-            dynamic? baseEntity = entity as CommonEntity;
             var container = await GetCosmosContainer();
 
-            var sqlQueryText = "SELECT * FROM c WHERE c.partitionKey = '" + baseEntity.PartitionKey + "'";
+            var sqlQueryText = "SELECT * FROM c WHERE c.partitionKey = '" + partitionKey + "'";
 
             QueryDefinition queryDefinition = new QueryDefinition(sqlQueryText);
             List<T> data = new List<T>();
@@ -40,7 +39,7 @@ namespace Cantoss.Data.Framework.Operations
             }
             catch (Exception ex)
             {
-
+                throw;
             }
             return data;
         }
@@ -49,28 +48,28 @@ namespace Cantoss.Data.Framework.Operations
         {
             dynamic? baseEntity = entity as CommonEntity;
             var container = await GetCosmosContainer();
-            ItemResponse<T> response = null;
             try
             {
-                response = await container.ReadItemAsync<T>(baseEntity.Id, new PartitionKey(baseEntity.PartitionKey));
+                entity = await container.ReadItemAsync<T>(baseEntity.Id, new PartitionKey(baseEntity.PartitionKey)) as ItemResponse<T>;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
+                throw;
             }
-            return response;
+            return entity;
 
         }
 
         public async Task<T> Insert<T>(T entity)
         {
-            var result = await GetCosmosContainer();
+            var container = await GetCosmosContainer();
             try
             {
-                return await result.CreateItemAsync<T>(entity);
+                entity=await container.CreateItemAsync<T>(entity);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+                throw;
             }
             return entity;
         }
@@ -80,9 +79,18 @@ namespace Cantoss.Data.Framework.Operations
             throw new NotImplementedException();
         }
 
-        public Task<T> Modify<T>(T entity)
+        public async Task<T> Modify<T>(T entity)
         {
-            throw new NotImplementedException();
+            var container = await GetCosmosContainer();
+            try
+            {
+                entity = await container.UpsertItemAsync<T>(entity);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return entity;
         }
 
         public Task<IList<T>> ModifyMany<T>(IList<T> entities)
@@ -90,9 +98,20 @@ namespace Cantoss.Data.Framework.Operations
             throw new NotImplementedException();
         }
 
-        public Task<T> Remove<T>(T entity)
+        public async Task<T> Remove<T>(T entity)
         {
-            throw new NotImplementedException();
+            var container = await GetCosmosContainer();
+            var deleteItem = entity as CommonEntity;
+            PartitionKey key = new(deleteItem.PartitionKey);
+            try
+            {
+                entity = await container.DeleteItemAsync<T>(deleteItem.Id, key);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return entity;
         }
 
         public Task<IList<T>> RemoveMany<T>(IList<T> entities)
